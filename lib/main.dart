@@ -7,6 +7,7 @@ import 'github_oauth_credentials.dart';
 import 'src/github_gql/github_queries.data.gql.dart';
 import 'src/github_gql/github_queries.req.gql.dart';
 import 'src/github_login.dart';
+import 'src/github_summary.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,28 +34,13 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GithubLoginWidget(
-      builder: (context, httpClient) {
+      builder: (context, client) {
         WindowToFront.activate();
-        final link = HttpLink(
-          'https://api.github.com/graphql',
-          httpClient: httpClient,
-        );
-        return FutureBuilder<$ViewerDetail$viewer>(
-          future: viewerDetail(link),
-          builder: (context, snapshot) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(title),
-              ),
-              body: Center(
-                child: Text(
-                  snapshot.hasData
-                      ? 'Hello ${snapshot.data.login}!'
-                      : 'Retrieving viewer login detail...',
-                ),
-              ),
-            );
-          },
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+          ),
+          body: GitHubSummary(client: client),
         );
       },
       githubClientId: githubClientId,
